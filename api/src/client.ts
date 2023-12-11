@@ -1,7 +1,11 @@
-import { Kysely } from 'kysely';
-import { SQLocalKysely } from 'sqlocal/kysely';
-import type { Database } from './schema';
+import { Kysely } from 'kysely'
+import { SQLocalKysely } from 'sqlocal/kysely'
+import type { Database } from './schema'
 
-const { dialect } = new SQLocalKysely('database.sqlite3');
+const databasePath = import.meta.env.PROD ? 'db.sqlite3' : 'development/db.sqlite3'
 
-export const db = new Kysely<Database>({ dialect });
+const { dialect, sql, destroy } = new SQLocalKysely(databasePath)
+
+const db = new Kysely<Database>({ dialect })
+
+export { sql, db, destroy }

@@ -1,47 +1,68 @@
 <script setup lang="ts">
-import { ElDivider, ElLink, ElButton } from 'element-plus';
-import { defineAsyncComponent, ref, onMounted } from 'vue';
-import { ALLOWED_HASH, useRouter } from './lib/router';
-import { migrator, migrateDownToBase,migrateUpToLatest } from '@seisa/api/src/migrator';
-import PhArrowCounterClockwiseLight from '~icons/ph/arrow-counter-clockwise-light';
-import { db } from '@seisa/api/src/client';
+import { ElButton, ElDivider, ElLink, ElMessageBox, ElNotification } from 'element-plus'
+import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+import { migrateDownToBase, migrator } from '@seisa/api/src/migrator'
+import { destroy } from '@seisa/api/src/client'
+import { ALLOWED_HASH, useRouter } from './lib/router'
+import { logger } from './lib/logger'
+import PhArrowCounterClockwiseLight from '~icons/ph/arrow-counter-clockwise-light'
 
-const Home = defineAsyncComponent(() => import('./pages/Home.vue'));
-const Spend = defineAsyncComponent(() => import('./pages/Spend.vue'));
-const Settings = defineAsyncComponent(() => import('./pages/Settings.vue'));
+const Home = defineAsyncComponent(() => import('./pages/Home.vue'))
+const Spend = defineAsyncComponent(() => import('./pages/Spend.vue'))
+const Settings = defineAsyncComponent(() => import('./pages/Settings.vue'))
 
-const { page } = useRouter();
+const { page } = useRouter()
 
-const intialized = ref(false);
+const intialized = ref(false)
 
 async function reset() {
-  await migrateDownToBase();
-  await migrateUpToLatest()
+  await ElMessageBox.confirm('Are you sure you want to reset the database?', 'Warning', {
+    confirmButtonText: 'Reset',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
+    showClose: false,
+  }).then(async () => {
+    logger.info('Resetting database...')
+    await migrateDownToBase()
+
+    logger.info('Done! Running migrations...')
+    const result = await migrator.migrateToLatest()
+    logger.info('Done! Report: ', result)
+
+    ElNotification.info({
+      title: 'Done!',
+      message: 'The database was reset.',
+    })
+  }).catch(() => {
+    ElNotification.info({
+      title: 'Reset cancelled',
+      message: 'The database was not reset.',
+    })
+  })
 }
 
 onMounted(async () => {
-  const result = await migrator.migrateToLatest();
+  logger.info('Mount. Running migrations...')
+  const results = await migrator.migrateToLatest()
+  logger.info('Done! Report: ', results)
 
-  console.info('[SEISA LOG]: ', result);
+  intialized.value = true
+})
 
-  console.log(await db.introspection.getTables())
-
-  // const data = await db.selectFrom('accounts').select('id').execute();
-
-  // console.log({ data });
-
-  intialized.value = true;
-});
+onBeforeUnmount(async () => {
+  logger.info('Unmount. Destroying client...')
+  await destroy()
+})
 </script>
+
 <template>
   <main class="h-screen w-screen">
-    <div
-      class="h-full w-full flex items-center justify-center"
-      v-if="!intialized"
-    >
+    <div v-if="!intialized" class="h-full w-full flex items-center justify-center">
       <div class="flex flex-col gap-2 items-center">
-        <img src="/loader.svg" class="w-10 h-10" />
-        <div class="text-base">Booting app...</div>
+        <img src="/loader.svg" class="w-10 h-10">
+        <div class="text-base">
+          Booting app...
+        </div>
       </div>
     </div>
 
@@ -51,13 +72,8 @@ onMounted(async () => {
 
         <ul role="menubar" class="flex gap-2 items-center">
           <ElLink
-            v-for="nav in ALLOWED_HASH"
-            :key="nav"
-            role="menuitem"
-            :href="`#${nav}`"
-            :type="page === nav ? 'primary' : 'default'"
-            tabindex="0"
-            :class="{
+            v-for="nav in ALLOWED_HASH" :key="nav" role="menuitem" :href="`#${nav}`"
+            :type="page === nav ? 'primary' : 'default'" tabindex="0" :class="{
               'focus:text-[color:var(--el-color-info)]': page !== nav,
             }"
           >
@@ -71,19 +87,19 @@ onMounted(async () => {
           </ElButton>
         </div>
       </div>
-      <el-divider class="my-0" />
+      <ElDivider class="my-0" />
 
       <div class="flex-grow p-2">
         <template v-if="page === 'home'">
-          <home />
+          <Home />
         </template>
 
         <template v-if="page === 'spend'">
-          <spend />
+          <Spend />
         </template>
 
         <template v-if="page === 'settings'">
-          <settings />
+          <Settings />
         </template>
       </div>
     </div>
