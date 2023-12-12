@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import IncomeCard from '../components/app/settings/IncomeCard.vue';
-import SavingsCard from '../components/app/settings/SavingsCard.vue';
+import IncomeCard from '../components/app/settings/IncomeCard.vue'
+import SavingsCard from '../components/app/settings/SavingsCard.vue'
 </script>
 
 <template>
