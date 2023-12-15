@@ -41,6 +41,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,json,svg,png,ico,wasm}'],
+      },
       manifest: {
         name: 'Seisa',
         short_name: 'Seisa',

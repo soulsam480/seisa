@@ -43,6 +43,7 @@ async function reset() {
 
 onMounted(async () => {
   logger.info('Mount. Running migrations...')
+
   const results = await migrator.migrateToLatest()
   logger.info('Done! Report: ', results)
 
