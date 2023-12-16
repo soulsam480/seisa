@@ -45,7 +45,7 @@ onMounted(async () => {
   logger.info('Mount. Running migrations...')
 
   const results = await migrator.migrateToLatest()
-  logger.info('Done! Report: ', results)
+  logger.info('Migraions done! Report: ', results)
 
   intialized.value = true
 })

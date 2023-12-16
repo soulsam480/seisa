@@ -112,6 +112,9 @@ importers:
       vue-tsc:
         specifier: ^1.8.22
         version: 1.8.24(typescript@5.3.2)
+      workbox-window:
+        specifier: ^7.0.0
+        version: 7.0.0
 
 packages:
 

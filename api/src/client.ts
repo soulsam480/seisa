@@ -6,6 +6,6 @@ const databasePath = import.meta.env.PROD ? 'db.sqlite3' : 'development/db.sqlit
 
 const { dialect, sql, destroy } = new SQLocalKysely(databasePath)
 
-const db = new Kysely<Database>({ dialect })
+const db = new Kysely<Database>({ dialect, log: ['query', 'error'] })
 
 export { sql, db, destroy }
