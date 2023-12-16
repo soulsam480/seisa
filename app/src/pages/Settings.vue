@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import IncomeCard from '../components/app/settings/IncomeCard.vue'
-import SavingsCard from '../components/app/settings/SavingsCard.vue'
+import AccountsSection from '../components/accounts/AccountsSection.vue'
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-4">
-    <IncomeCard />
-
-    <SavingsCard />
+  <div class="flex flex-col items-center gap-4 sm:w-2/3 mx-auto">
+    <AccountsSection />
   </div>
 </template>

@@ -8,6 +8,19 @@
     background-color: var(--el-button-bg-color, var(--el-color-white));
   }
 }
+@layer components {
+  .card-sm {
+    --el-card-padding: 8px !important;
+  }
+
+  .card-md {
+    --el-card-padding: 12px !important;
+  }
+
+  .card-lg {
+    --el-card-padding: 16px !important;
+  }
+}
 
 #app {
   height: 100vh;

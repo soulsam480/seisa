@@ -6,4 +6,8 @@ export default antfu({
 
   typescript: true,
   vue: true,
+
+  formatters: {
+    css: 'prettier',
+  },
 })
