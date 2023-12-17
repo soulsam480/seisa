@@ -2,7 +2,7 @@
 import type { FormRules } from 'element-plus'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElNotification, ElScrollbar, ElText } from 'element-plus'
 import { ref, toRef } from 'vue'
-import type { NewAccount } from '../../../../api/src/schema'
+import type { NewAccount } from '@seisa/api/src/schema'
 import { createForm } from '../../lib/form'
 import { appStore } from '../../state/store'
 import AppSection from '../lib/AppSection.vue'
@@ -11,7 +11,7 @@ import AccountItem from './AccountItem.vue'
 
 interface AccountForm extends Pick<NewAccount, 'account_no' | 'bank' | 'name'> { }
 
-const accountsStore = toRef(appStore, 'accountsStore')
+const accountsStore = toRef(appStore, 'accounts_store')
 
 const accountDialogVisible = ref(false)
 const editingAccount = ref<Account | null>(null)
@@ -36,7 +36,7 @@ async function handleFormSubmit(formData: AccountForm) {
     return
   }
 
-  if (await accountsStore.value.addAccount(formData)) {
+  if (await accountsStore.value.add_account(formData)) {
     ElNotification.success({
       title: `Account ${formData.name} added successfully`,
     })
@@ -85,7 +85,9 @@ function handleEdit(account: Account) {
 <template>
   <ElDialog
     v-model="accountDialogVisible" :title="editingAccount !== null ? `Editing ${editingAccount.name}` : 'Add Account'"
-    destroy-on-close @close="resetForm"
+    destroy-on-close append-to-body
+    class="seisa-dialog"
+    @close="resetForm"
   >
     <ElForm ref="accountFormRef" :model="accountForm" label-position="top" :rules="FORM_RULES">
       <ElFormItem prop="name" label="Account name">

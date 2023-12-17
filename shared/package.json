@@ -1,0 +1,11 @@
+{
+  "name": "@seisa/shared",
+  "version": "0.0.0",
+  "description": "Seisa shared utils",
+  "scripts": {},
+  "keywords": [],
+  "author": "soulsam480 <soulsam480@hotmail.com>",
+  "peerDependencies": {
+    "tiny-colors": "^2.1.2"
+  }
+}

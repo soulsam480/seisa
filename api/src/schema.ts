@@ -12,7 +12,7 @@ export type AccountModel = Selectable<AccountsTable>
 export type NewAccount = Insertable<AccountsTable>
 export type AccountUpdate = Updateable<AccountsTable>
 
-export type IncomeCatrgory =
+export type IncomeCategory =
   'bank_deposit' |
   'transfer' |
   'bill' |
@@ -37,7 +37,7 @@ export interface IncomesTable {
   // OPTIONAL
   active: boolean
   recurring: boolean
-  category: IncomeCatrgory | null
+  category: IncomeCategory | null
   from: string | null
   tags: string | null
   notes: string | null
@@ -123,7 +123,7 @@ export interface TransactionsTable {
   recurring: boolean
 
   // OPTIONAL
-  category: ExpenseCategory | IncomeCatrgory | null
+  category: ExpenseCategory | IncomeCategory | null
   from: string | null
   tags: string | null
   notes: string | null

@@ -23,6 +23,9 @@ importers:
 
   api:
     dependencies:
+      '@seisa/shared':
+        specifier: workspace:*
+        version: link:../shared
       kysely:
         specifier: ^0.26.3
         version: 0.26.3
@@ -32,6 +35,9 @@ importers:
       sqlocal:
         specifier: ^0.6.4
         version: 0.6.4
+      tiny-colors:
+        specifier: ^2.1.2
+        version: 2.1.2
       vite:
         specifier: ^5.0.0
         version: 5.0.4(@types/node@20.10.3)
@@ -54,6 +60,9 @@ importers:
       '@seisa/api':
         specifier: workspace:*
         version: link:../api
+      '@seisa/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@vueuse/core':
         specifier: ^10.6.1
         version: 10.6.1(vue@3.3.9)
@@ -115,6 +124,12 @@ importers:
       workbox-window:
         specifier: ^7.0.0
         version: 7.0.0
+
+  shared:
+    dependencies:
+      tiny-colors:
+        specifier: ^2.1.2
+        version: 2.1.2
 
 packages:
 
@@ -5980,6 +5995,10 @@ packages:
     dependencies:
       any-promise: 1.3.0
     dev: true
+
+  /tiny-colors@2.1.2:
+    resolution: {integrity: sha512-6peGRBtkYBJpVrQUWOPKrC0ECo6WotUlXxirVTKvihjdgxQETpKtLdCKIb68IHjJYH1AOE7GM7RnxFvkGHsqOg==}
+    dev: false
 
   /titleize@3.0.0:
     resolution: {integrity: sha512-KxVu8EYHDPBdUYdKZdKtU2aj2XfEx9AfjXxE/Aj0vT06w2icA09Vus1rh6eSu1y01akYg6BjIK/hxyLJINoMLQ==}

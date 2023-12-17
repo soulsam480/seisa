@@ -6,9 +6,11 @@
     "migration": "pnpm tsx scripts/migration.ts"
   },
   "peerDependencies": {
+    "@seisa/shared":"workspace:*",
     "kysely": "^0.26.3",
     "radash": "^11.0.0",
     "sqlocal": "^0.6.4",
+    "tiny-colors": "^2.1.2",
     "vite": "^5.0.0"
   },
   "devDependencies": {

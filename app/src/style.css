@@ -20,6 +20,10 @@
   .card-lg {
     --el-card-padding: 16px !important;
   }
+
+  .seisa-dialog {
+    @apply sm:!w-[600px] !w-[calc(100%_-_32px)];
+  }
 }
 
 #app {

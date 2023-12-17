@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@seisa/api": "workspace:*",
+    "@seisa/shared": "workspace:*",
     "@vueuse/core": "^10.6.1",
     "clsx": "^2.0.0",
     "element-plus": "^2.4.3",

@@ -7,13 +7,14 @@ import './style.css'
 createApp(App).mount('#app')
 
 registerSW({
-  immediate: true,
+  onNeedRefresh() {
+    import('./lib/swHandler').then(({ onNeedRefresh }) => {
+      onNeedRefresh()
+    })
+  },
   onOfflineReady() {
-    import('element-plus').then(({ ElNotification }) => {
-      ElNotification.info({
-        position: 'bottom-right',
-        title: 'Updated app to latest release !',
-      })
+    import('./lib/swHandler').then(({ onOfflineReady }) => {
+      onOfflineReady()
     })
   },
 })

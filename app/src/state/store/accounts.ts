@@ -1,6 +1,6 @@
 import { db } from '@seisa/api/src/client'
 import type { NewAccount } from '@seisa/api/src/schema'
-import { logger } from '../../lib/logger'
+import { logger } from '@seisa/shared/src/logger'
 import { Account } from '../models/account'
 import type { AppStore } from '.'
 
@@ -22,7 +22,7 @@ export class AccountsStore {
     return this.all_accounts.filter(account => account.deleted_at === null)
   }
 
-  async fetchAccounts() {
+  async fetch_accounts() {
     this.is_busy = true
 
     try {
@@ -38,7 +38,7 @@ export class AccountsStore {
     }
   }
 
-  async addAccount(account: NewAccount) {
+  async add_account(account: NewAccount) {
     this.is_busy = true
 
     try {
@@ -60,7 +60,7 @@ export class AccountsStore {
     }
   }
 
-  async updateAccount(account: Account) {
+  async update_account(account: Account) {
     this.is_busy = true
 
     try {
@@ -91,7 +91,7 @@ export class AccountsStore {
     }
   }
 
-  async deleteAccount(account: Account) {
+  async delete_account(account: Account) {
     this.is_busy = true
 
     try {
@@ -115,6 +115,6 @@ export class AccountsStore {
   }
 
   async init() {
-    await this.fetchAccounts()
+    await this.fetch_accounts()
   }
 }

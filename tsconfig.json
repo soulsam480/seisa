@@ -1,13 +1,22 @@
 {
   "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@seisa/shared/*":["./shared/*"],
+      "@seisa/api/*":["./api/*"]
+    }
+  },
   "references": [
     {
       "path": "./api"
     },
     {
       "path": "./app"
+    },
+    {
+      "path": "./shared"
     }
   ],
-  "include": ["api/*", "app/*"],
+  "include": ["./api/**/*", "./app/**/*", "./eslint.config.js","./shared/**/*"],
   "exclude": ["node_modules"]
 }

@@ -3,8 +3,8 @@ import { ElButton, ElDivider, ElLink, ElMessageBox, ElNotification } from 'eleme
 import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { migrateDownToBase, migrator } from '@seisa/api/src/migrator'
 import { destroy } from '@seisa/api/src/client'
+import { logger } from '@seisa/shared/src/logger'
 import { ALLOWED_HASH, useRouter } from './lib/router'
-import { logger } from './lib/logger'
 import PhArrowCounterClockwiseLight from '~icons/ph/arrow-counter-clockwise-light'
 
 const Home = defineAsyncComponent(() => import('./pages/Home.vue'))
