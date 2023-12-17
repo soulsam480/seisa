@@ -11,7 +11,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
 
-    "types": ["unplugin-icons/types/vue", "vite/client", "vite-plugin-pwa/vue", "vite-plugin-pwa/client"],
+    "types": ["unplugin-icons/types/vue", "vite/client", "vite-plugin-pwa/vue", "vite-plugin-pwa/client", "@histoire/plugin-vue/components"],
     "allowImportingTsExtensions": true,
     /* Linting */
     "strict": true,

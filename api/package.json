@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "migration": "pnpm tsx scripts/migration.ts"
+    "migration:generate": "pnpm tsx scripts/migration.ts"
   },
   "peerDependencies": {
-    "@seisa/shared":"workspace:*",
+    "@seisa/shared": "workspace:*",
     "kysely": "^0.26.3",
     "radash": "^11.0.0",
     "sqlocal": "^0.6.4",
@@ -17,6 +17,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.10.3",
     "fs-extra": "^11.2.0",
+    "portfinder": "^1.0.32",
     "tsx": "^4.6.2"
   }
 }

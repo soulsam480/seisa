@@ -1,4 +1,5 @@
-import type { IncomeCategory, IncomeModel } from '@seisa/api/src/schema'
+import type { IncomeCategory, IncomeModel, NewIncome } from '@seisa/api/src/schema'
+import type { OverrideProperties, SetNonNullable } from 'type-fest'
 import type { IncomesStore } from '../store/incomes'
 
 export class Income {
@@ -33,4 +34,21 @@ export class Income {
     this.notes = income.notes
     this.deleted_at = income.deleted_at
   }
+}
+
+export type IncomeForm = OverrideProperties<SetNonNullable<Omit<NewIncome, 'id' | 'reminder_id' | 'deleted_at'>, 'category'>, {
+  tags: string[]
+}>
+
+export const DEFAULT_INCOME: IncomeForm = {
+  active: true,
+  amount: 0,
+  date: '',
+  name: '',
+  recurring: false,
+  account_id: null,
+  category: 'credit',
+  from: '',
+  notes: '',
+  tags: [],
 }

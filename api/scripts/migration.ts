@@ -2,6 +2,8 @@
 import * as path from 'node:path'
 import { ensureDir, ensureFile, readFile, writeFile } from 'fs-extra'
 import { camel, pascal, snake } from 'radash'
+import colors from 'tiny-colors'
+import portfinder from 'portfinder'
 
 function getMigration(name: string) {
   const migrationName = `Migration${pascal(camel(name))}`
@@ -70,8 +72,21 @@ async function main() {
   // eslint-ignore-next-line
   const name = process.argv[2]
 
+  let isDevRunning = false
+
+  try {
+    await portfinder.getPortPromise({ port: 5173, stopPort: 5173 })
+  } catch (error) {
+    isDevRunning = true
+  }
+
+  if (isDevRunning) {
+    console.error(colors.bgRed.white.bold('\n--------- STOP DEV SERVER FIRST ---------\n'))
+    process.exit(1)
+  }
+
   if (!name) {
-    console.error('Missing path argument')
+    console.error(colors.bgRed.white.bold('NAME IS REQUIRED'))
     process.exit(1)
   }
 
@@ -89,6 +104,8 @@ async function main() {
   await writeFile(`${folderPath}/${fileName}.ts`, content, 'utf8')
 
   await updateMigrationRegistry(fileName, migrationName, timestamp)
+  
+  console.info(colors.bgBlue.white.bold(`\nMigration ${fileName} created.\n Run dev server after migration is implemented.\n`))
 }
 
 void main()

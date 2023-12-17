@@ -39,7 +39,6 @@ export default defineConfig({
     }),
     SQLiteDevPlugin(),
     VitePWA({
-      registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,json,svg,png,ico,wasm}'],

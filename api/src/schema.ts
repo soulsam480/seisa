@@ -139,10 +139,22 @@ export type TransactionModel = Selectable<TransactionsTable>
 export type NewTransaction = Insertable<TransactionsTable>
 export type TransactionUpdate = Updateable<TransactionsTable>
 
+export interface TagsTable {
+  id: Generated<number>
+  name: string
+  color: string
+  deleted_at: string | null
+}
+
+export type TagModel = Selectable<TagsTable>
+export type NewTag = Insertable<TagsTable>
+export type TagUpdate = Updateable<TagsTable>
+
 export interface Database {
   accounts: AccountsTable
   incomes: IncomesTable
   reminders: RemindersTable
   expenses: ExpensesTable
   transactions: TransactionsTable
+  tags: TagsTable
 }
