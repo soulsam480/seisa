@@ -51,6 +51,7 @@ export class AccountsStore {
       return true
     }
     catch (error) {
+      this.appStore.handle_db_error(error)
       logger.error('Error adding account: ', error)
 
       return false
@@ -82,6 +83,7 @@ export class AccountsStore {
       return true
     }
     catch (error) {
+      this.appStore.handle_db_error(error)
       logger.error('Error updating account: ', error)
 
       return false
@@ -105,6 +107,7 @@ export class AccountsStore {
       return true
     }
     catch (error) {
+      this.appStore.handle_db_error(error)
       logger.error('Error deleting account: ', error)
 
       return false

@@ -10,6 +10,8 @@
   "scripts": {
     "dev": "pnpm --filter @seisa/app run dev",
     "build": "pnpm --filter @seisa/app run build",
+    "story:dev": "pnpm --filter @seisa/app run story:dev",
+    "story:build": "pnpm --filter @seisa/app run story:build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

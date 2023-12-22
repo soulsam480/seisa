@@ -23,7 +23,7 @@ function SQLiteDevPlugin(): Plugin {
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({ script: { defineModel: true } }),
     ElementPlus({}),
     Components({
       resolvers: [
@@ -83,5 +83,9 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['sqlocal'],
+  },
+  build: {
+    target: 'esnext',
+    minify: 'esbuild',
   },
 })

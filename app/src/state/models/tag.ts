@@ -16,6 +16,19 @@ export class Tag {
     this.color = tag.color
     this.deleted_at = tag.deleted_at
   }
+
+  static generateRandomColor(): string {
+    const letters = '0123456789ABCDEF'
+
+    let color = '#'
+
+    for (let i = 0; i < 6; ++i)
+      color += letters[Math.floor(Math.random() * 16)]
+
+    return color
+  }
+
+  static DELIMITER = '__$__'
 }
 
 export type TagForm = Omit<TagModel, 'id' | 'deleted_at'>

@@ -21,9 +21,14 @@ export class IncomesStore {
       const incomes = await db.selectFrom('incomes').selectAll().execute()
 
       this.all_incomes = incomes.map(income => new Income(this, income))
+
+      return true
     }
     catch (error) {
+      this.app_store.handle_db_error(error)
       logger.error('Error fetching incomes: ', error)
+
+      return false
     }
     finally {
       this.is_busy = false
@@ -44,6 +49,7 @@ export class IncomesStore {
       return true
     }
     catch (error) {
+      this.app_store.handle_db_error(error)
       logger.error('Error adding income: ', error)
 
       return false

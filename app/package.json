@@ -5,11 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
-    "story:dev": "histoire dev",
-    "story:build": "histoire build",
-    "story:preview": "histoire preview"
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@seisa/api": "workspace:*",
@@ -23,14 +22,25 @@
     "vue": "^3.3.8"
   },
   "devDependencies": {
-    "@histoire/plugin-vue": "^0.17.6",
+    "@faker-js/faker": "^8.3.1",
     "@iconify-json/ph": "^1.1.8",
+    "@storybook/addon-essentials": "^7.6.6",
+    "@storybook/addon-interactions": "^7.6.6",
+    "@storybook/addon-links": "^7.6.6",
+    "@storybook/blocks": "^7.6.6",
+    "@storybook/test": "^7.6.6",
+    "@storybook/vue3": "^7.6.6",
+    "@storybook/vue3-vite": "^7.6.6",
     "@types/node": "^20.10.3",
     "@vite-pwa/assets-generator": "^0.1.0",
     "@vitejs/plugin-vue": "^4.5.0",
     "autoprefixer": "^10.4.16",
-    "histoire": "^0.17.6",
+    "fishery": "^2.2.2",
     "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^7.6.6",
+    "storybook-vue-addon": "^0.4.0",
     "tailwindcss": "^3.3.5",
     "type-fest": "^4.8.3",
     "typescript": "^5.2.2",
