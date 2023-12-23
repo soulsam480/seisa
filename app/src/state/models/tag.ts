@@ -17,6 +17,14 @@ export class Tag {
     this.deleted_at = tag.deleted_at
   }
 
+  async delete() {
+    return await this.store.delete(this)
+  }
+
+  async save() {
+    return await this.store.update(this)
+  }
+
   static generateRandomColor(): string {
     const letters = '0123456789ABCDEF'
 

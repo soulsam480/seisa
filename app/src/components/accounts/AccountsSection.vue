@@ -36,7 +36,7 @@ async function handleFormSubmit(formData: AccountForm) {
     return
   }
 
-  if (await accountsStore.value.add_account(formData)) {
+  if (await accountsStore.value.insert(formData)) {
     ElNotification.success({
       title: `Account ${formData.name} added successfully`,
     })
@@ -74,9 +74,11 @@ const FORM_RULES: FormRules<AccountForm> = {
 function handleEdit(account: Account) {
   editingAccount.value = account
 
-  accountForm.name = account.name
-  accountForm.bank = account.bank
-  accountForm.account_no = account.account_no
+  Object.assign(accountForm.value, {
+    name: account.name,
+    bank: account.bank,
+    account_no: account.account_no,
+  })
 
   openAddAccountDialog()
 }
@@ -113,12 +115,12 @@ function handleEdit(account: Account) {
     </ElForm>
   </ElDialog>
 
-  <AppSection @add="openAddAccountDialog">
+  <AppSection :loading="accountsStore.is_fetching" @add="openAddAccountDialog">
     <template #title>
       Accounts
     </template>
 
-    <div v-if="accountsStore.accounts.length === 0" class="text-center">
+    <div v-if="accountsStore.items.length === 0" class="text-center">
       <ElText size="large" type="info">
         No active accounts found !
       </ElText>
@@ -126,7 +128,7 @@ function handleEdit(account: Account) {
 
     <ElScrollbar v-else max-height="350px">
       <AccountItem
-        v-for="account in accountsStore.accounts" :key="account.id" :account="account" class="mr-4"
+        v-for="account in accountsStore.items" :key="account.id" :account="account" class="mr-4"
         @edit="handleEdit"
       />
     </ElScrollbar>

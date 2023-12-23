@@ -20,10 +20,10 @@ export class Account {
   }
 
   async delete() {
-    return await this.store.delete_account(this)
+    return await this.store.delete(this)
   }
 
   async save() {
-    return await this.store.update_account(this)
+    return await this.store.update(this)
   }
 }

@@ -34,7 +34,7 @@ function handleChange(tag: Tag) {
     model.value.push(tag.id)
 }
 
-const { formRef: tagFormRef, formState: tagForm, submitForm } = createForm<Pick<TagForm, 'name'>>({
+const { formRef: tagFormRef, formState: tagForm, submitForm, resetForm } = createForm<Pick<TagForm, 'name'>>({
   name: '',
 }, (formData) => {
   emit('addTag', {
@@ -57,7 +57,7 @@ function handlePopoverClose() {
   document.body.click()
 
   nextTick(() => {
-    tagFormRef.value?.resetFields()
+    resetForm()
   })
 }
 </script>

@@ -3,6 +3,7 @@ import { ElNotification } from 'element-plus'
 import { AccountsStore } from './accounts'
 import { IncomesStore } from './incomes'
 import { TagsStore } from './tags'
+import PhSkullLight from '~icons/ph/skull-light'
 
 export class AppStore {
   accounts_store: AccountsStore
@@ -28,6 +29,7 @@ export class AppStore {
       ElNotification.error({
         title: 'Database Error',
         message: error.message,
+        icon: PhSkullLight,
       })
     }
   }

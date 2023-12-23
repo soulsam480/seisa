@@ -1,6 +1,12 @@
 <script setup lang='ts'>
-import { ElButton, ElCard } from 'element-plus'
+import { ElButton, ElCard, ElSkeleton, ElSkeletonItem } from 'element-plus'
 import PhPlusCircleLight from '~icons/ph/plus-circle-light'
+
+withDefaults(defineProps<{
+  loading?: boolean
+}>(), {
+  loading: false,
+})
 
 defineEmits<{
   (e: 'add', event: MouseEvent): void
@@ -21,6 +27,16 @@ defineEmits<{
       </div>
     </template>
 
-    <slot />
+    <ElSkeleton :loading="loading" animated>
+      <template #template>
+        <ElSkeletonItem variant="rect" class="w-full" />
+        <ElSkeletonItem variant="rect" class="w-full" />
+        <ElSkeletonItem variant="rect" class="w-full" />
+      </template>
+
+      <template #default>
+        <slot />
+      </template>
+    </ElSkeleton>
   </ElCard>
 </template>

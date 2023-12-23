@@ -1,65 +1,59 @@
-import { logger } from '@seisa/shared/src/logger'
-import type { NewIncome } from '@seisa/api/src/schema'
 import { db } from '@seisa/api/src/client'
+import type { NewIncome } from '@seisa/api/src/schema'
+import { toRaw } from 'vue'
+import { Store } from '../lib/Store'
 import { Income } from '../models/income'
-import type { AppStore } from '.'
 
-export class IncomesStore {
-  all_incomes: Income[] = []
-  is_busy = false
+export class IncomesStore extends Store<Income, NewIncome> {
+  async get_all() {
+    return await this.action(async () => {
+      const incomes = await db.selectFrom('incomes')
+        .where('deleted_at', 'is', null)
+        .selectAll()
+        .execute()
 
-  constructor(readonly app_store: AppStore) { }
-
-  get incomes() {
-    return this.all_incomes.filter(income => income.deleted_at === null)
+      this.items = incomes.map(income => new Income(this, income))
+    })
   }
 
-  async fetch_incomes() {
-    this.is_busy = true
-
-    try {
-      const incomes = await db.selectFrom('incomes').selectAll().execute()
-
-      this.all_incomes = incomes.map(income => new Income(this, income))
-
-      return true
-    }
-    catch (error) {
-      this.app_store.handle_db_error(error)
-      logger.error('Error fetching incomes: ', error)
-
-      return false
-    }
-    finally {
-      this.is_busy = false
-    }
-  }
-
-  async add_income(income: NewIncome) {
-    this.is_busy = true
-
-    try {
+  async insert(income: NewIncome) {
+    return await this.action(async () => {
       const new_income = await db.insertInto('incomes')
         .values(income)
-        .returning(['id as id', 'name as name', 'amount as amount', 'date as date', 'active as active', 'recurring as recurring', 'category as category', 'from as from', 'tags as tags', 'notes as notes', 'deleted_at as deleted_at', 'account_id as account_id', 'reminder_id as reminder_id'])
+        .returningAll()
         .executeTakeFirstOrThrow()
 
-      this.all_incomes.push(new Income(this, new_income))
-
-      return true
-    }
-    catch (error) {
-      this.app_store.handle_db_error(error)
-      logger.error('Error adding income: ', error)
-
-      return false
-    }
-    finally {
-      this.is_busy = false
-    }
+      this.items.push(new Income(this, new_income))
+    })
   }
 
-  async init() {
-    await this.fetch_incomes()
+  async update(income: Income) {
+    return await this.action(async () => {
+      const updated_income = await db.updateTable('incomes')
+        .where('id', '=', income.id)
+        .set({
+          ...toRaw(income).get_db_payload(),
+        })
+        .returningAll()
+        .executeTakeFirstOrThrow()
+
+      income.update_model_from_db(updated_income)
+    })
+  }
+
+  async delete(income: Income) {
+    return await this.action(async () => {
+      const updated = await db.updateTable('incomes')
+        .where('id', '=', income.id)
+        .set({ deleted_at: new Date().toISOString() })
+        .returning('deleted_at')
+        .executeTakeFirstOrThrow()
+
+      Object.assign(income, {
+        deleted_at: updated.deleted_at,
+      })
+
+      this.items.splice(this.items.indexOf(income), 1)
+    })
   }
 }

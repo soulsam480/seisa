@@ -5,8 +5,8 @@ import { ref, toRef } from 'vue'
 import { createForm } from '../../lib/form'
 import { appStore } from '../../state/store'
 import AppSection from '../lib/AppSection.vue'
-import type { IncomeForm } from '../../state/models/income'
-import { DEFAULT_INCOME, Income } from '../../state/models/income'
+import type { Income } from '../../state/models/income'
+import { IncomeForm } from '../../state/models/income'
 import { INCOME_CATEGORY } from '../../lib/constants'
 import TagInput from '../lib/TagInput.vue'
 import type { TagForm } from '../../state/models/tag'
@@ -23,33 +23,30 @@ const editingIncome = ref<Income | null>(null)
 async function handleFormSubmit(formData: IncomeForm) {
   closeIncomeFormDialog()
 
-  //   if (editingIncome.value) {
-  //     Object.assign(editingIncome.value, {
-  //       name: formData.name,
-  //       bank: formData.bank,
-  //       account_no: formData.account_no,
-  //     })
+  if (editingIncome.value) {
+    Object.assign(editingIncome.value, {
+      ...formData.get_update_payload(),
+    })
 
-  //     if (await editingIncome.value.save()) {
-  //       ElNotification.success({
-  //         title: `Account ${formData.name} updated successfully`,
-  //       })
-  //     }
+    if (await editingIncome.value.save()) {
+      ElNotification.success({
+        title: `${formData.name} updated successfully`,
+      })
+    }
 
-  //     editingIncome.value = null
-  //     return
-  //   }
+    editingIncome.value = null
+    return
+  }
 
-  if (await incomesStore.value.add_income(Income.toDBPayload(formData))) {
+  if (await incomesStore.value.insert(formData.get_insert_payload())) {
     ElNotification.success({
       title: `Income ${formData.name} added successfully`,
     })
   }
 }
 
-const { formRef: incomeFormRef, formState: incomeForm, resetForm, submitForm } = createForm<IncomeForm>({
-  ...DEFAULT_INCOME,
-}, handleFormSubmit)
+const { formRef: incomeFormRef, formState: incomeForm, resetForm, submitForm }
+  = createForm<IncomeForm>(() => new IncomeForm(), handleFormSubmit)
 
 function closeIncomeFormDialog() {
   resetForm()
@@ -91,21 +88,18 @@ const FORM_RULES: FormRules<IncomeForm> = {
   tags: [
     { type: 'array' },
   ],
-
 }
 
 function handleEdit(income: Income) {
   editingIncome.value = income
 
-  Object.assign(incomeForm, {
-    ...Income.toFormPayload(income),
-  })
+  incomeForm.value = income.get_form_payload()
 
   openIncomeFormDialog()
 }
 
 function handleAddTag(tag: TagForm) {
-  void tagsStore.value.add_tag(tag)
+  void tagsStore.value.insert(tag)
 }
 </script>
 
@@ -148,7 +142,7 @@ function handleAddTag(tag: TagForm) {
       <ElFormItem prop="tags" label="Tags">
         <TagInput
           v-model="incomeForm.tags"
-          :tags="tagsStore.tags"
+          :tags="tagsStore.items"
           @add-tag="handleAddTag"
         />
       </ElFormItem>
@@ -162,10 +156,9 @@ function handleAddTag(tag: TagForm) {
       </ElFormItem>
 
       <ElFormItem prop="account_id" label="Account">
-        <!-- @vue-ignore -->
         <ElSelect v-model="incomeForm.account_id" class="w-full" placeholder="Select" :clearable="false">
           <ElOption
-            v-for="item in accountsStore.accounts"
+            v-for="item in accountsStore.items"
             :key="item.id"
             :label="item.name"
             :value="item.id"
@@ -188,12 +181,12 @@ function handleAddTag(tag: TagForm) {
     </ElForm>
   </ElDialog>
 
-  <AppSection @add="openIncomeFormDialog">
+  <AppSection :loading="incomesStore.is_fetching" @add="openIncomeFormDialog">
     <template #title>
       Incomes
     </template>
 
-    <div v-if="incomesStore.incomes.length === 0" class="text-center">
+    <div v-if="incomesStore.items.length === 0" class="text-center">
       <ElText size="large" type="info">
         No active incomes found !
       </ElText>
@@ -201,7 +194,7 @@ function handleAddTag(tag: TagForm) {
 
     <ElScrollbar v-else max-height="350px">
       <IncomeItem
-        v-for="income in incomesStore.incomes " :key="income.id" :income="income" class="mr-4"
+        v-for="income in incomesStore.items " :key="income.id" :income="income" class="mr-4"
         @edit="handleEdit"
       />
     </ElScrollbar>
