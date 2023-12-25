@@ -1,13 +1,5 @@
 {
   "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "types": [
-      "unplugin-icons/types/vue",
-      "vite/client",
-      "vite-plugin-pwa/vue",
-      "vite-plugin-pwa/client",
-    ],
-  },
   "references": [
     {
       "path": "./tsconfig.node.json"
@@ -17,6 +9,7 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src/vite-env.d.ts"
   ]
 }

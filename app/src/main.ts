@@ -3,18 +3,13 @@ import { registerSW } from 'virtual:pwa-register'
 import { createApp } from 'vue'
 import App from './App.vue'
 import './style.css'
+import { onNeedRefresh, onOfflineReady } from './lib/swHandler'
 
 createApp(App).mount('#app')
 
-registerSW({
+const refresh = registerSW({
+  onOfflineReady,
   onNeedRefresh() {
-    import('./lib/swHandler').then(({ onNeedRefresh }) => {
-      onNeedRefresh()
-    })
-  },
-  onOfflineReady() {
-    import('./lib/swHandler').then(({ onOfflineReady }) => {
-      onOfflineReady()
-    })
+    onNeedRefresh(refresh)
   },
 })
