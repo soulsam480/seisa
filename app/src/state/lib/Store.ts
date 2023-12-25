@@ -1,7 +1,7 @@
 import { logger } from '@seisa/shared/src/logger'
 import type { AppStore } from '../store'
 
-interface IRecord {
+export interface IRecord {
   id: number
   discarded_at?: string | null
 }

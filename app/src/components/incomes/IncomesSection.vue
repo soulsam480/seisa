@@ -12,6 +12,7 @@ import TagInput from '../lib/TagInput.vue'
 import type { TagForm } from '../../state/models/tag'
 import { preventSubmit, sentence } from '../../lib/utils'
 import IncomeItem from './IncomeItem.vue'
+import PhCurrencyInr from '~icons/ph/currency-inr'
 
 const incomesStore = toRef(appStore, 'incomes_store')
 const tagsStore = toRef(appStore, 'tags_store')
@@ -21,11 +22,11 @@ const incomeDialogVisible = ref(false)
 const editingIncome = ref<Income | null>(null)
 
 async function handleFormSubmit(formData: IncomeForm) {
-  closeIncomeFormDialog()
+  formData = formData.clone()
 
   if (editingIncome.value) {
     Object.assign(editingIncome.value, {
-      ...formData.get_update_payload(),
+      ...formData.get_model_update_payload(),
     })
 
     if (await editingIncome.value.save()) {
@@ -35,6 +36,8 @@ async function handleFormSubmit(formData: IncomeForm) {
     }
 
     editingIncome.value = null
+
+    closeIncomeFormDialog()
     return
   }
 
@@ -42,6 +45,8 @@ async function handleFormSubmit(formData: IncomeForm) {
     ElNotification.success({
       title: `Income ${formData.name} added successfully`,
     })
+
+    closeIncomeFormDialog()
   }
 }
 
@@ -70,7 +75,7 @@ const FORM_RULES: FormRules<IncomeForm> = {
       min: 1,
     },
   ],
-  date: [
+  credited_at: [
     {
       required: true,
       type: 'date',
@@ -118,9 +123,9 @@ function handleAddTag(tag: TagForm) {
         <ElInput v-model.number="incomeForm.amount" autocomplete="off" placeholder="1000" />
       </ElFormItem>
 
-      <ElFormItem prop="date" label="Credit date">
+      <ElFormItem prop="credited_at" label="Credit date">
         <ElDatePicker
-          v-model="incomeForm.date"
+          v-model="incomeForm.credited_at"
           class="w-full"
           type="date"
           placeholder="2021/12/10"
@@ -166,8 +171,8 @@ function handleAddTag(tag: TagForm) {
         </ElSelect>
       </ElFormItem>
 
-      <ElFormItem prop="recurring">
-        <ElCheckbox v-model="incomeForm.recurring" label="Does this repeat on the selected date every month ?" />
+      <ElFormItem prop="is_recurring">
+        <ElCheckbox v-model="incomeForm.is_recurring" label="Does this repeat on the selected date every month ?" />
       </ElFormItem>
 
       <ElFormItem>
@@ -182,8 +187,16 @@ function handleAddTag(tag: TagForm) {
   </ElDialog>
 
   <AppSection :loading="incomesStore.is_fetching" @add="openIncomeFormDialog">
+    <template #icon>
+      <PhCurrencyInr />
+    </template>
+
     <template #title>
-      Incomes
+      incomes
+    </template>
+
+    <template #subtitle>
+      Declare your incomes. You can also add recurring incomes.
     </template>
 
     <div v-if="incomesStore.items.length === 0" class="text-center">

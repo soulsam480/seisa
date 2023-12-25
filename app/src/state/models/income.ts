@@ -7,9 +7,9 @@ export class Income {
   id!: number
   name!: string
   amount!: number
-  date!: Date
-  active!: boolean
-  recurring!: boolean
+  credited_at!: Date
+  is_active!: boolean
+  is_recurring!: boolean
   category!: IncomeCategory | null
   from!: string | null
   tags!: Tag[]
@@ -29,7 +29,7 @@ export class Income {
     if (this.tags === null)
       return []
 
-    return this.tags.map(tag_id => Number(tag_id))
+    return this.tags.map(tag => Number(tag.id))
   }
 
   set tag_ids(tag_ids: number[]) {
@@ -41,20 +41,18 @@ export class Income {
   }
 
   get_db_payload(): IncomeUpdate {
-    const { id: _id, ...rest } = this
-
     return {
-      account_id: rest.account_id,
-      active: rest.active,
-      amount: rest.amount,
-      category: rest.category,
-      date: rest.date.toISOString(),
-      from: rest.from,
-      name: rest.name,
-      notes: rest.notes,
-      recurring: rest.recurring,
-      reminder_id: rest.reminder_id,
-      tags: rest.tags.map(tag => tag.id).join(Tag.DELIMITER),
+      account_id: this.account_id,
+      is_active: this.is_active,
+      amount: this.amount,
+      category: this.category,
+      credited_at: this.credited_at.toISOString(),
+      from: this.from,
+      name: this.name,
+      notes: this.notes,
+      is_recurring: this.is_recurring,
+      reminder_id: this.reminder_id,
+      tags: this.tag_ids.join(Tag.DELIMITER),
     }
   }
 
@@ -62,6 +60,9 @@ export class Income {
     return new IncomeForm(this)
   }
 
+  /**
+   * @private
+   */
   _serialize_tags(tags: string | null) {
     if (tags === null)
       return []
@@ -75,9 +76,9 @@ export class Income {
     this.id = income.id
     this.name = income.name
     this.amount = income.amount
-    this.date = new Date(income.date)
-    this.active = income.active
-    this.recurring = income.recurring
+    this.credited_at = income.credited_at as unknown as Date
+    this.is_active = income.is_active
+    this.is_recurring = income.is_recurring
     this.category = income.category
     this.from = income.from
     this.tags = this._serialize_tags(income.tags)
@@ -96,54 +97,58 @@ export class Income {
   }
 }
 
-export class IncomeForm extends Form {
+export class IncomeForm extends Form<Income, NewIncome> {
   name: string
   amount: number
-  active: boolean
-  recurring: boolean
+  is_active: boolean
+  is_recurring: boolean
   tags: number[]
   category: IncomeCategory
   from?: string
   notes?: string
   account_id?: number
-  date?: Date
+  credited_at?: Date
 
   constructor(
-    income?: Income,
+    income?: Income | IncomeForm,
   ) {
     super()
 
     this.name = income?.name ?? ''
     this.amount = income?.amount ?? 0
-    this.active = income?.active ?? true
-    this.recurring = income?.recurring ?? false
-    this.tags = income?.tag_ids ?? []
+    this.is_active = income?.is_active ?? true
+    this.is_recurring = income?.is_recurring ?? false
     this.category = income?.category ?? 'credit'
     this.from = income?.from ?? ''
     this.notes = income?.notes ?? ''
     this.account_id = income?.account_id ?? undefined
-    this.date = income?.date
+    this.credited_at = income?.credited_at
+
+    this.tags = income?.tags.map(it => typeof it === 'object' ? it.id : it) ?? []
   }
 
-  get_update_payload() {
-    if (this.date === undefined)
+  get_model_update_payload() {
+    if (this.credited_at === undefined)
       throw new Error('Date is required')
 
+    const { tags, ...form } = this
+
     return {
-      ...this,
+      ...form,
+      tag_ids: tags,
     }
   }
 
-  get_insert_payload(): NewIncome {
-    if (this.date === undefined)
+  get_insert_payload() {
+    if (this.credited_at === undefined)
       throw new Error('Date is required')
 
-    const { tags, ...rest } = this.get_update_payload()
+    const { tag_ids, ...rest } = this.get_model_update_payload()
 
     return {
       ...rest,
-      tags: tags.join(Tag.DELIMITER),
-      date: this.date.toISOString(),
+      tags: tag_ids.join(Tag.DELIMITER),
+      credited_at: this.credited_at.toISOString(),
     }
   }
 }

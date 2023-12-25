@@ -8,6 +8,7 @@ import { appStore } from '../../state/store'
 import AppSection from '../lib/AppSection.vue'
 import type { Account } from '../../state/models/account'
 import AccountItem from './AccountItem.vue'
+import PhPiggyBank from '~icons/ph/piggy-bank'
 
 interface AccountForm extends Pick<NewAccount, 'account_no' | 'bank' | 'name'> { }
 
@@ -17,8 +18,6 @@ const accountDialogVisible = ref(false)
 const editingAccount = ref<Account | null>(null)
 
 async function handleFormSubmit(formData: AccountForm) {
-  closeAddAccountDialog()
-
   if (editingAccount.value) {
     Object.assign(editingAccount.value, {
       name: formData.name,
@@ -33,6 +32,8 @@ async function handleFormSubmit(formData: AccountForm) {
     }
 
     editingAccount.value = null
+
+    closeAddAccountDialog()
     return
   }
 
@@ -40,6 +41,8 @@ async function handleFormSubmit(formData: AccountForm) {
     ElNotification.success({
       title: `Account ${formData.name} added successfully`,
     })
+
+    closeAddAccountDialog()
   }
 }
 
@@ -74,11 +77,11 @@ const FORM_RULES: FormRules<AccountForm> = {
 function handleEdit(account: Account) {
   editingAccount.value = account
 
-  Object.assign(accountForm.value, {
+  accountForm.value = {
     name: account.name,
     bank: account.bank,
     account_no: account.account_no,
-  })
+  }
 
   openAddAccountDialog()
 }
@@ -116,8 +119,16 @@ function handleEdit(account: Account) {
   </ElDialog>
 
   <AppSection :loading="accountsStore.is_fetching" @add="openAddAccountDialog">
+    <template #icon>
+      <PhPiggyBank />
+    </template>
+
     <template #title>
-      Accounts
+      accounts
+    </template>
+
+    <template #subtitle>
+      Manage your bank accounts.
     </template>
 
     <div v-if="accountsStore.items.length === 0" class="text-center">

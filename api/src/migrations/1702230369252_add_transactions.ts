@@ -6,11 +6,12 @@ export const Migration1702230369252addtransactions: Migration = {
       .createTable('transactions')
       .addColumn('id', 'integer', col => col.primaryKey().autoIncrement())
 
-      .addColumn('account_id', 'integer', (col) => {
-        return col.references('accounts.id').onDelete('set null')
-      })
+      .addColumn('account_id', 'integer', col =>
+        col.references('accounts.id').onDelete('set null'))
+
       .addColumn('income_id', 'integer', col =>
         col.references('incomes.id').onDelete('set null'))
+
       .addColumn('expense_id', 'integer', col =>
         col.references('expenses.id').onDelete('set null'))
 
@@ -21,6 +22,7 @@ export const Migration1702230369252addtransactions: Migration = {
 
       .addColumn('tags', 'text', col => col.defaultTo(''))
       .addColumn('active', 'boolean', col => col.notNull().defaultTo(true))
+
       .addColumn('recurring', 'boolean', col =>
         col.notNull().defaultTo(false))
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { deleteDB, destroy } from '@seisa/api/src/client'
+import { migrator } from '@seisa/api/src/migrator'
+import { logger } from '@seisa/shared/src/logger'
 import { ElButton, ElDivider, ElLink, ElMessageBox, ElNotification } from 'element-plus'
 import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
-import { migrateDownToBase, migrator } from '@seisa/api/src/migrator'
-import { destroy } from '@seisa/api/src/client'
-import { logger } from '@seisa/shared/src/logger'
 import { ALLOWED_HASH, useRouter } from './lib/router'
 import PhArrowCounterClockwiseLight from '~icons/ph/arrow-counter-clockwise-light'
 
@@ -22,17 +22,20 @@ async function reset() {
     type: 'warning',
     showClose: false,
   }).then(async () => {
-    logger.info('Resetting database...')
-    await migrateDownToBase()
+    logger.info('Deleting database...')
 
-    logger.info('Done! Running migrations...')
-    const result = await migrator.migrateToLatest()
-    logger.info('Done! Report: ', result)
+    await deleteDB()
+
+    logger.info('Done! Reloading page to intialize db...')
 
     ElNotification.info({
-      title: 'Done!',
-      message: 'The database was reset.',
+      title: 'The database was reset.',
+      message: 'Reloading page to intialize db...',
     })
+
+    window.setTimeout(() => {
+      window.location.reload()
+    }, 200)
   }).catch(() => {
     ElNotification.info({
       title: 'Reset cancelled',
@@ -45,7 +48,18 @@ onMounted(async () => {
   logger.info('Mount. Running migrations...')
 
   const results = await migrator.migrateToLatest()
-  logger.info('Migraions done! Report: ', results)
+
+  if (results.error) {
+    ElNotification.error({
+      title: 'Error running migrations. Check Console',
+      message: results.error.toString(),
+    })
+
+    logger.error('Failed to migrate DB! Report: ', results)
+  }
+  else {
+    logger.info('Migrations done! Report: ', results)
+  }
 
   intialized.value = true
 })
@@ -88,6 +102,7 @@ onBeforeUnmount(async () => {
           </ElButton>
         </div>
       </div>
+
       <ElDivider class="my-0" />
 
       <div class="flex-grow p-2">

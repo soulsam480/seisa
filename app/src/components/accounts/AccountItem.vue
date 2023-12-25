@@ -1,8 +1,9 @@
 <script setup lang='ts'>
-import { ElButton, ElMessageBox, ElNotification, ElText } from 'element-plus'
+import { ElButton, ElIcon, ElMessageBox, ElNotification, ElText } from 'element-plus'
 import type { Account } from '../../state/models/account'
 import PhTrashLight from '~icons/ph/trash-light'
 import PhPencilSimpleLight from '~icons/ph/pencil-simple-light'
+import PhDot from '~icons/ph/dot'
 
 const props = defineProps<{ account: Account }>()
 
@@ -38,6 +39,12 @@ async function handleDelete() {
 
       <ElText type="info" size="small" tag="p">
         {{ account.bank }}
+
+        <ElIcon>
+          <PhDot />
+        </ElIcon>
+
+        {{ account.account_no }}
       </ElText>
     </div>
 

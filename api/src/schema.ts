@@ -32,11 +32,11 @@ export interface IncomesTable {
   id: Generated<number>
   name: string
   amount: number
-  date: string
+  credited_at: string
 
   // OPTIONAL
-  active: boolean
-  recurring: boolean
+  is_active: boolean
+  is_recurring: boolean
   category: IncomeCategory | null
   from: string | null
   tags: string | null
@@ -55,18 +55,17 @@ export type IncomeUpdate = Updateable<IncomesTable>
 export interface RemindersTable {
   id: Generated<number>
   interval: string
-  date: string
+  trigger_at: string
 
   // OPTIONAL
-  notify: boolean
-  last_reminder: string | null
-  next_reminder: string | null
+  is_notify: boolean
+  last_triggered_at: string | null
+  next_trigger_at: string | null
   deleted_at: string | null
 
   // FOREIGN KEYS
   income_id: Generated<number> | null
   expense_id: Generated<number> | null
-
 }
 
 export type ReminderModel = Selectable<RemindersTable>
@@ -91,11 +90,11 @@ export interface ExpensesTable {
   id: Generated<number>
   name: string
   amount: number
-  date: string
+  debited_at: string
 
   // OPTIONAL
-  active: boolean
-  recurring: boolean
+  is_active: boolean
+  is_recurring: boolean
   category: ExpenseCategory | null
   from: string | null
   tags: string | null
@@ -117,10 +116,10 @@ export interface TransactionsTable {
   id: Generated<number>
   name: string
   amount: number
-  date: string
+  transaction_at: string
   type: TransactionType
-  active: boolean
-  recurring: boolean
+  is_active: boolean
+  is_recurring: boolean
 
   // OPTIONAL
   category: ExpenseCategory | IncomeCategory | null

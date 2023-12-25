@@ -36,3 +36,6 @@ input[type='date'].seisa-date::-webkit-calendar-picker-indicator {
   background: none;
   z-index: 1;
 }
+.el-text {
+  align-self: initial !important;
+}

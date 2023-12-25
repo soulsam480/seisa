@@ -12,15 +12,6 @@ export const migrator = new Migrator({
   },
 })
 
-export async function migrateDownToBase() {
-  const migrations = await migrator.getMigrations()
-
-  for (const _ of migrations)
-    await migrator.migrateDown()
-
-  await migrator.migrateDown()
-}
-
 export async function migrateUpToLatest() {
   const migrations = await migrator.getMigrations()
 

@@ -9,6 +9,7 @@ export class AppStore {
   accounts_store: AccountsStore
   incomes_store: IncomesStore
   tags_store: TagsStore
+  initialized = false
 
   constructor() {
     this.accounts_store = new AccountsStore(this)
@@ -17,11 +18,16 @@ export class AppStore {
   }
 
   async init() {
+    if (this.initialized)
+      return
+
     await Promise.all([
+      this.tags_store.init(),
       this.accounts_store.init(),
       this.incomes_store.init(),
-      this.tags_store.init(),
     ])
+
+    this.initialized = true
   }
 
   handle_db_error(error: unknown) {

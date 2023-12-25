@@ -14,10 +14,11 @@
     "story:build": "pnpm --filter @seisa/app run storybook-build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "type-check": "pnpm --filter @seisa/app run type-check"
+    "type-check": "pnpm --filter @seisa/app run type-check",
+    "migration:generate": "pnpm --filter @seisa/api run migration:generate"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.4.6",
+    "@antfu/eslint-config": "^2.5.0",
     "eslint": "^8.56.0",
     "eslint-plugin-format": "^0.1.0",
     "typescript": "^5.3.3"

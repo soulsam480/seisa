@@ -1,5 +1,31 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
 
+const ELEMENT_COLORS = ['primary', 'success', 'warning', 'danger', 'error', 'info']
+
+const ELEMENT_SHADES = [
+  'light-3',
+  'light-5',
+  'light-7',
+  'light-8',
+  'light-9',
+  'dark-2',
+]
+
+const ELEMENT_COLOR_VARIABLES = ELEMENT_COLORS.reduce((acc, color) => {
+  const colorBase = `el-${color}`
+
+  acc = {
+    ...acc,
+    [colorBase]: `var(--el-color-${color})`,
+    ...ELEMENT_SHADES.reduce((acc, shade) => {
+      acc[`${colorBase}-${shade}`] = `var(--el-color-${color}-${shade})`
+      return acc
+    }, {}),
+  }
+
+  return acc
+}, {})
+
 const UI_BORDER_COLORS = {
   'base': 'var(--el-border-color)',
   'light': 'var(--el-border-color-light)',
@@ -21,6 +47,14 @@ export default {
   content: ['./src/**/*.{vue,ts}'],
   theme: {
     extend: {
+      textColor: {
+        ...defaultTheme.textColor,
+        ...ELEMENT_COLOR_VARIABLES,
+      },
+      backgroundColor: {
+        ...defaultTheme.backgroundColor,
+        ...ELEMENT_COLOR_VARIABLES,
+      },
       borderColor: {
         ...defaultTheme.borderColor,
         ...UI_BORDER_COLORS,
