@@ -13,7 +13,7 @@ const Settings = defineAsyncComponent(() => import('./pages/Settings.vue'))
 
 const { page } = useRouter()
 
-const intialized = ref(false)
+const initialized = ref(false)
 
 async function reset() {
   await ElMessageBox.confirm('Are you sure you want to reset the database?', 'Warning', {
@@ -26,11 +26,11 @@ async function reset() {
 
     await deleteDB()
 
-    logger.info('Done! Reloading page to intialize db...')
+    logger.info('Done! Reloading page to initialize db...')
 
     ElNotification.info({
       title: 'The database was reset.',
-      message: 'Reloading page to intialize db...',
+      message: 'Reloading page to initialize db...',
     })
 
     window.setTimeout(() => {
@@ -61,7 +61,7 @@ onMounted(async () => {
     logger.info('Migrations done! Report: ', results)
   }
 
-  intialized.value = true
+  initialized.value = true
 })
 
 onBeforeUnmount(async () => {
@@ -72,7 +72,7 @@ onBeforeUnmount(async () => {
 
 <template>
   <main class="h-screen w-screen">
-    <div v-if="!intialized" class="h-full w-full flex items-center justify-center">
+    <div v-if="!initialized" class="h-full w-full flex items-center justify-center">
       <div class="flex flex-col gap-2 items-center">
         <img src="/loader.svg" class="w-10 h-10">
         <div class="text-base">
