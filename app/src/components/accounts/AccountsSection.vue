@@ -53,7 +53,7 @@ const { formRef: accountFormRef, formState: accountForm, resetForm, submitForm }
 }, handleFormSubmit)
 
 function closeAddAccountDialog() {
-  resetForm()
+  handleReset()
   accountDialogVisible.value = false
 }
 
@@ -85,6 +85,11 @@ function handleEdit(account: Account) {
 
   openAddAccountDialog()
 }
+
+function handleReset() {
+  resetForm()
+  editingAccount.value = null
+}
 </script>
 
 <template>
@@ -92,7 +97,7 @@ function handleEdit(account: Account) {
     v-model="accountDialogVisible" :title="editingAccount !== null ? `Editing ${editingAccount.name}` : 'Add Account'"
     destroy-on-close append-to-body
     class="seisa-dialog"
-    @close="resetForm"
+    @close="handleReset"
   >
     <ElForm ref="accountFormRef" :model="accountForm" label-position="top" :rules="FORM_RULES">
       <ElFormItem prop="name" label="Account name">

@@ -54,7 +54,7 @@ const { formRef: incomeFormRef, formState: incomeForm, resetForm, submitForm }
   = createForm<IncomeForm>(() => new IncomeForm(), handleFormSubmit)
 
 function closeIncomeFormDialog() {
-  resetForm()
+  handleReset()
   incomeDialogVisible.value = false
 }
 
@@ -106,13 +106,19 @@ function handleEdit(income: Income) {
 function handleAddTag(tag: TagForm) {
   void tagsStore.value.insert(tag)
 }
+
+function handleReset() {
+  resetForm()
+  editingIncome.value = null
+}
 </script>
 
 <template>
   <ElDialog
     v-model="incomeDialogVisible"
     :title="editingIncome !== null ? `Editing ${editingIncome.name}` : 'Add Income'" destroy-on-close append-to-body
-    class="seisa-dialog" @close="resetForm"
+    class="seisa-dialog"
+    @close="handleReset"
   >
     <ElForm ref="incomeFormRef" :model="incomeForm" label-position="top" :rules="FORM_RULES" @submit="preventSubmit">
       <ElFormItem prop="name" label="Income name">

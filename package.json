@@ -12,13 +12,15 @@
     "build": "pnpm --filter @seisa/app run build",
     "story:dev": "pnpm --filter @seisa/app run storybook",
     "story:build": "pnpm --filter @seisa/app run storybook-build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache",
     "type-check": "pnpm --filter @seisa/app run type-check",
-    "migration:generate": "pnpm --filter @seisa/api run migration:generate"
+    "migration:generate": "pnpm --filter @seisa/api run migration:generate",
+    "spell-check": "cspell --no-progress --gitignore --cache --config=.cspell.json \"**/src/**/*.{md,mdx,ts,js,tsx,jsx,vue}\""
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.1",
+    "cspell": "^8.3.0",
     "eslint": "^8.56.0",
     "eslint-plugin-format": "^0.1.0",
     "typescript": "^5.3.3"

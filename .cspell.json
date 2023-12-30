@@ -1,5 +1,33 @@
 {
-    "words": [
-        "unplugin","seisa","antfu","sqlocal"
-    ]
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "dictionaries": [
+    "project-words",
+    "html",
+    "typescript",
+    "softwareTerms",
+    "node",
+    "en_US",
+    "npm",
+    "misc",
+    "filetypes",
+    "companies",
+    "aws",
+    "lorem-ipsum"
+  ],
+  "ignorePaths": [
+    "**/node_modules",
+    "./api/src/migrations/*.ts"
+  ],
+  "words": [
+    "unplugin",
+    "seisa",
+    "antfu",
+    "sqlocal",
+    "kysely",
+    "vueuse",
+    "radash",
+    "Millis",
+    "opfs"
+  ]
 }
