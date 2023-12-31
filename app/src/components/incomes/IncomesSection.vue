@@ -194,11 +194,11 @@ function handleReset() {
 
   <AppSection :loading="incomesStore.is_fetching" @add="openIncomeFormDialog">
     <template #icon>
-      <PhCurrencyInr />
+      <PhCurrencyInr class="text-el-success" />
     </template>
 
     <template #title>
-      incomes
+      Incomes
     </template>
 
     <template #subtitle>

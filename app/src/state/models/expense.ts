@@ -1,28 +1,28 @@
-import type { IncomeCategory, IncomeModel, IncomeUpdate, NewIncome } from '@seisa/api/src/schema'
-import type { IncomesStore } from '../store/incomes'
+import type { ExpenseCategory, ExpenseModel, ExpenseUpdate, NewExpense } from '@seisa/api/src/schema'
 import { Form } from '../lib/Form'
+import type { ExpensesStore } from '../store/expense'
 import { Tag } from './tag'
 
-export class Income {
+export class Expense {
   id!: number
   name!: string
   amount!: number
-  credited_at!: Date
+  debited_at!: Date
   is_active!: boolean
   is_recurring!: boolean
-  category!: IncomeCategory | null
+  category!: ExpenseCategory | null
   from!: string | null
   tags!: Tag[]
   notes!: string | null
-  deleted_at!: string | null
+  deleted_at!: Date | null
   account_id!: number | null
   reminder_id!: number | null
 
   constructor(
-    readonly store: IncomesStore,
-    income: IncomeModel,
+    readonly store: ExpensesStore,
+    expense: ExpenseModel,
   ) {
-    Object.assign(this, this.update_model_from_db(income))
+    Object.assign(this, this.update_model_from_db(expense))
   }
 
   get tag_ids(): number[] {
@@ -40,13 +40,13 @@ export class Income {
     return this.store.app_store.accounts_store.items.find(account => account.id === this.account_id) ?? null
   }
 
-  get_db_payload(): IncomeUpdate {
+  get_db_payload(): ExpenseUpdate {
     return {
       account_id: this.account_id,
       is_active: this.is_active,
       amount: this.amount,
       category: this.category,
-      credited_at: this.credited_at.toISOString(),
+      debited_at: this.debited_at.toISOString(),
       from: this.from,
       name: this.name,
       notes: this.notes,
@@ -56,8 +56,8 @@ export class Income {
     }
   }
 
-  get_form_payload(): IncomeForm {
-    return new IncomeForm(this)
+  get_form_payload(): ExpenseForm {
+    return new ExpenseForm(this)
   }
 
   /**
@@ -72,20 +72,20 @@ export class Income {
     return this.store.app_store.tags_store.items.filter(tag => tag_ids.includes(tag.id))
   }
 
-  update_model_from_db(income: IncomeModel) {
-    this.id = income.id
-    this.name = income.name
-    this.amount = income.amount
-    this.credited_at = income.credited_at as unknown as Date
-    this.is_active = income.is_active
-    this.is_recurring = income.is_recurring
-    this.category = income.category
-    this.from = income.from
-    this.tags = this._serialize_tags(income.tags)
-    this.notes = income.notes
-    this.deleted_at = income.deleted_at
-    this.account_id = income.account_id
-    this.reminder_id = income.reminder_id
+  update_model_from_db(expense: ExpenseModel) {
+    this.id = expense.id
+    this.name = expense.name
+    this.amount = expense.amount
+    this.debited_at = expense.debited_at as unknown as Date
+    this.is_active = expense.is_active
+    this.is_recurring = expense.is_recurring
+    this.category = expense.category
+    this.from = expense.from
+    this.tags = this._serialize_tags(expense.tags)
+    this.notes = expense.notes
+    this.deleted_at = expense.deleted_at as unknown as Date
+    this.account_id = expense.account_id
+    this.reminder_id = expense.reminder_id
   }
 
   async delete() {
@@ -97,38 +97,38 @@ export class Income {
   }
 }
 
-export class IncomeForm extends Form<Income, NewIncome> {
+export class ExpenseForm extends Form<Expense, NewExpense> {
   name: string
   amount: number
   is_active: boolean
   is_recurring: boolean
   tags: number[]
-  category: IncomeCategory
+  category: ExpenseCategory
   from?: string
   notes?: string
   account_id?: number
-  credited_at?: Date
+  debited_at?: Date
 
   constructor(
-    income?: Income | IncomeForm,
+    expense?: Expense | ExpenseForm,
   ) {
     super()
 
-    this.name = income?.name ?? ''
-    this.amount = income?.amount ?? 0
-    this.is_active = income?.is_active ?? true
-    this.is_recurring = income?.is_recurring ?? true
-    this.category = income?.category ?? 'credit'
-    this.from = income?.from ?? ''
-    this.notes = income?.notes ?? ''
-    this.account_id = income?.account_id ?? undefined
-    this.credited_at = income?.credited_at
+    this.name = expense?.name ?? ''
+    this.amount = expense?.amount ?? 0
+    this.is_active = expense?.is_active ?? true
+    this.is_recurring = expense?.is_recurring ?? true
+    this.category = expense?.category ?? 'transfer'
+    this.from = expense?.from ?? ''
+    this.notes = expense?.notes ?? ''
+    this.account_id = expense?.account_id ?? undefined
+    this.debited_at = expense?.debited_at
 
-    this.tags = income?.tags.map(it => typeof it === 'object' ? it.id : it) ?? []
+    this.tags = expense?.tags.map(it => typeof it === 'object' ? it.id : it) ?? []
   }
 
   get_model_update_payload() {
-    if (this.credited_at === undefined)
+    if (this.debited_at === undefined)
       throw new Error('Date is required')
 
     const { tags, ...form } = this
@@ -140,7 +140,7 @@ export class IncomeForm extends Form<Income, NewIncome> {
   }
 
   get_insert_payload() {
-    if (this.credited_at === undefined)
+    if (this.debited_at === undefined)
       throw new Error('Date is required')
 
     const { tag_ids, ...rest } = this.get_model_update_payload()
@@ -148,7 +148,7 @@ export class IncomeForm extends Form<Income, NewIncome> {
     return {
       ...rest,
       tags: tag_ids.join(Tag.DELIMITER),
-      credited_at: this.credited_at.toISOString(),
+      debited_at: this.debited_at.toISOString(),
     }
   }
 }

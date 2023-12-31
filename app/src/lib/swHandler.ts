@@ -5,7 +5,7 @@ import ReloadPrompt from '../components/app/ReloadPrompt.vue'
 export function onOfflineReady() {
   ElNotification.info({
     position: 'bottom-right',
-    title: 'Updated to latest release',
+    title: 'Updated to latest release. Ready to work offline.',
   })
 }
 

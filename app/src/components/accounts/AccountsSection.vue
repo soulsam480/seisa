@@ -1,12 +1,12 @@
 <script setup lang='ts'>
+import type { NewAccount } from '@seisa/api/src/schema'
 import type { FormRules } from 'element-plus'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElNotification, ElScrollbar, ElText } from 'element-plus'
 import { ref, toRef } from 'vue'
-import type { NewAccount } from '@seisa/api/src/schema'
 import { createForm } from '../../lib/form'
+import type { Account } from '../../state/models/account'
 import { appStore } from '../../state/store'
 import AppSection from '../lib/AppSection.vue'
-import type { Account } from '../../state/models/account'
 import AccountItem from './AccountItem.vue'
 import PhPiggyBank from '~icons/ph/piggy-bank'
 
@@ -125,11 +125,11 @@ function handleReset() {
 
   <AppSection :loading="accountsStore.is_fetching" @add="openAddAccountDialog">
     <template #icon>
-      <PhPiggyBank />
+      <PhPiggyBank class="text-el-primary" />
     </template>
 
     <template #title>
-      accounts
+      Accounts
     </template>
 
     <template #subtitle>

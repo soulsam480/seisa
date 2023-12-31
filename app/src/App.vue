@@ -62,6 +62,9 @@ onMounted(async () => {
   }
 
   initialized.value = true
+
+  // initialize store
+  await import('./state/store/index')
 })
 
 onBeforeUnmount(async () => {
@@ -87,10 +90,16 @@ onBeforeUnmount(async () => {
 
         <ul role="menubar" class="flex gap-2 items-center">
           <ElLink
-            v-for="nav in ALLOWED_HASH" :key="nav" role="menuitem" :href="`#${nav}`"
-            :type="page === nav ? 'primary' : 'default'" tabindex="0" :class="{
-              'focus:text-[color:var(--el-color-info)]': page !== nav,
-            }"
+            v-for="nav in ALLOWED_HASH" :key="nav"
+            role="menuitem"
+            :href="`#${nav}`"
+            :type="page === nav ? 'primary' : 'default'"
+            tabindex="0"
+            class="uppercase text-xs font-semibold"
+            :class="[
+              {
+                'focus:text-[color:var(--el-color-info)]': page !== nav,
+              }]"
           >
             {{ nav }}
           </ElLink>

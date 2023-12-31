@@ -39,3 +39,11 @@ input[type='date'].seisa-date::-webkit-calendar-picker-indicator {
 .el-text {
   align-self: initial !important;
 }
+
+.markdown-body {
+  @apply prose prose-invert prose-sm prose-zinc;
+}
+
+.markdown-body > h3:first-child {
+  margin-top: 1rem;
+}

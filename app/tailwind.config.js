@@ -1,4 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
+import typo from '@tailwindcss/typography'
 
 const ELEMENT_COLORS = ['primary', 'success', 'warning', 'danger', 'error', 'info']
 
@@ -66,6 +67,7 @@ export default {
     },
   },
   plugins: [
+    typo,
     function ({ addBase }) {
       addBase({
         '.el-button': {

@@ -9,6 +9,10 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "paths": {
+      "@seisa/shared/*": ["./shared/*"],
+      "@seisa/api/*": ["./api/*"]
+    },
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
 
@@ -19,11 +23,7 @@
     "noUnusedParameters": true,
     "noEmit": true,
     "isolatedModules": true,
-    "skipLibCheck": true,
-    "paths": {
-      "@seisa/shared/*":["./shared/*"],
-      "@seisa/api/*":["./api/*"]
-    }
+    "skipLibCheck": true
   },
   "references": [
     {
@@ -36,6 +36,6 @@
       "path": "./shared"
     }
   ],
-  "include": ["./api/**/*", "./app/**/*", "./eslint.config.js","./shared/**/*"],
+  "include": ["./api/**/*", "./app/**/*", "./eslint.config.js", "./shared/**/*"],
   "exclude": ["node_modules"]
 }

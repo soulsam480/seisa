@@ -20,14 +20,19 @@
     "./api/src/migrations/*.ts"
   ],
   "words": [
-    "unplugin",
-    "seisa",
     "antfu",
-    "sqlocal",
+    "axio",
+    "Excalidraw",
+    "Insertable",
     "kysely",
-    "vueuse",
-    "radash",
     "Millis",
-    "opfs"
+    "opfs",
+    "radash",
+    "seisa",
+    "sqlocal",
+    "tailwindcss",
+    "unplugin",
+    "Updateable",
+    "vueuse"
   ]
 }

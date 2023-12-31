@@ -7,6 +7,7 @@ import Components from 'unplugin-vue-components/vite'
 import type { Plugin } from 'vite'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import Markdown from 'unplugin-vue-markdown/vite'
 
 function SQLiteDevPlugin(): Plugin {
   return {
@@ -23,7 +24,8 @@ function SQLiteDevPlugin(): Plugin {
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({ include: [/\.vue$/, /\.md$/] }),
+    Markdown({}),
     ElementPlus({}),
     Components({
       resolvers: [

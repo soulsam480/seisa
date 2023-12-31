@@ -10,6 +10,11 @@ const preview: Preview = {
     controls: {
       expanded: true,
     },
+    docs: {
+      source: {
+        type: 'code',
+      },
+    },
   },
 }
 

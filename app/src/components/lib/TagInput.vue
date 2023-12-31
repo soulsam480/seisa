@@ -71,14 +71,16 @@ function handlePopoverClose() {
       :effect="model.includes(tag.id) ? 'dark' : 'plain'"
       :size="size"
       role="button"
+      tabindex="0"
       :aria-label="tag.name"
       round
       disable-transitions
       @click="handleChange(tag)"
+      @keyup.enter="handleChange(tag)"
     >
       <span class="inline-flex gap-1 items-center">
         <PhHashFill :style="`color: ${tag.color};`" />
-        <span>
+        <span class="capitalize">
           {{ tag.name }}
         </span>
       </span>
