@@ -1,13 +1,63 @@
-<script setup lang='ts' generic="TSchema extends readonly Record<string, Struct<any, any>>">
+<script lang="ts">
 import { ElButton } from 'element-plus'
 import { type Infer, type Struct, validate } from 'superstruct'
 import type { PartialDeep } from 'type-fest'
-import type { Ref, UnwrapRef } from 'vue'
-import { computed, markRaw, onBeforeMount, reactive, ref, toRaw, toRef, toValue, useSlots, watch } from 'vue'
+import type { DeepReadonly, InjectionKey, Ref, UnwrapNestedRefs, UnwrapRef } from 'vue'
+import { computed, inject, onBeforeMount, provide, reactive, ref, toRaw, toRef, toValue, useSlots, watch } from 'vue'
 
 // we need this for error messages
 import 'element-plus/es/components/form/style/css'
 
+interface TSchemaConstraint { readonly [K: string]: Struct<any, any> }
+
+interface IFormState<Key> {
+  hasValidated: boolean
+  errors: Record<string, string | undefined> | null
+  currentStep: Key
+}
+
+export type WizardFormData<T extends TSchemaConstraint> = {
+  [K in keyof T]: Infer<T[K]>
+}
+
+interface IWizardContext<Schema extends TSchemaConstraint> {
+  /**
+   * steps from schema in order of properties
+   */
+  steps: Readonly<(keyof Schema)[]>
+  /**
+   * form validation state
+   * {@link IFormState}
+   */
+  formState: Ref<IFormState<keyof Schema>>
+  /**
+   * form data
+   */
+  formData: UnwrapNestedRefs<WizardFormData<Schema>>
+  /**
+   * go to next step
+   * enabled when current step is valid
+   */
+  next: () => void
+  /**
+   * go to previous step
+   */
+  previous: () => void
+}
+
+const WIZARD_CONTEXT_SYMBOL: InjectionKey<DeepReadonly<IWizardContext<any>>> = Symbol('wizard-context')
+
+export function useWizardCtx<Schema extends TSchemaConstraint>() {
+  const ctx = inject<DeepReadonly<IWizardContext<Schema>>>(WIZARD_CONTEXT_SYMBOL)
+
+  if (ctx === undefined)
+    throw new Error('useWizardCtx must be used within Wizard component')
+
+  return ctx
+}
+</script>
+
+<script setup lang='ts' generic="TSchema extends TSchemaConstraint">
 const props = withDefaults(defineProps<{
   /**
    * validation schema for each step
@@ -46,24 +96,21 @@ type TErrorKeysForStep<T extends TStepKey> =
 /**
  * wizard form data inferred from schema
  */
-type TWizardFormData = {
-  [K in TStepKey]: Infer<TSchema[K]>
-}
+type TWizardFormData = WizardFormData<TSchema>
 
 /**
- * wizard slots
+ * wizard internal slots
+ * @private
  */
 interface IWizardSlots {
   navigation: (props: {
     next: () => void
     previous: () => void
+    disableNext: boolean
+    disablePrevious: boolean
   }) => any
-}
-
-interface IFormState {
-  hasValidated: boolean
-  errors: Record<string, string | undefined> | null
-  currentStep: TStepKey
+  before: () => any
+  after: () => any
 }
 
 /**
@@ -85,11 +132,11 @@ type TStepSlots = {
 
 // -------------
 
-const INTERNAL_SLOTS = markRaw(['navigation'] as const)
+const INTERNAL_SLOTS = new Set(['navigation', 'before', 'after'])
 
 const steps = toValue<TStepKey[]>(() => Object.keys(props.schema))
 
-const formState = ref<IFormState>({
+const formState = ref<IFormState<TStepKey>>({
   errors: null,
   hasValidated: false,
   currentStep: steps[0],
@@ -192,14 +239,24 @@ onBeforeMount(() => {
 })
 
 const containerRef = ref<HTMLDivElement | null>(null)
+
+provide(WIZARD_CONTEXT_SYMBOL, {
+  formState,
+  steps,
+  formData,
+  next,
+  previous,
+})
 </script>
 
 <template>
   <div v-bind="$attrs" ref="containerRef">
+    <slot name="before" />
+
     <template v-for=" [__stepKey, __stepRenderFn] in Object.entries($slots)" :key="__stepKey">
       <template
         v-if="
-          !INTERNAL_SLOTS.includes(__stepKey as any)
+          !INTERNAL_SLOTS.has(__stepKey)
             && __stepRenderFn !== undefined
             && currentStep === __stepKey
         "
@@ -209,7 +266,10 @@ const containerRef = ref<HTMLDivElement | null>(null)
       </template>
     </template>
 
-    <slot name="navigation" :next="next" :previous="previous">
+    <slot name="after" />
+
+    <!-- eslint-disable-next-line vue/attribute-hyphenation -->
+    <slot name="navigation" :next="next" :previous="previous" :disableNext="disableNext" :disablePrevious="disablePrevious">
       <ElButton :disabled="disablePrevious" @click="previous">
         Previous
       </ElButton>
