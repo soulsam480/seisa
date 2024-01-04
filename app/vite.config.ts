@@ -91,4 +91,7 @@ export default defineConfig({
     minify: 'esbuild',
     cssMinify: 'lightningcss',
   },
+  define: {
+    __VUE_OPTIONS_API__: false,
+  },
 })

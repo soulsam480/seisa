@@ -4,6 +4,7 @@ import { AccountsStore } from './accounts'
 import { IncomesStore } from './incomes'
 import { TagsStore } from './tags'
 import { ExpensesStore } from './expense'
+import { TransactionsStore } from './transactions'
 import PhSkullLight from '~icons/ph/skull-light'
 
 export class AppStore {
@@ -13,12 +14,14 @@ export class AppStore {
   incomes_store: IncomesStore
   tags_store: TagsStore
   expenses_store: ExpensesStore
+  transactions_store: TransactionsStore
 
   constructor() {
     this.accounts_store = new AccountsStore(this)
     this.incomes_store = new IncomesStore(this)
     this.tags_store = new TagsStore(this)
     this.expenses_store = new ExpensesStore(this)
+    this.transactions_store = new TransactionsStore(this)
   }
 
   async init() {
@@ -30,6 +33,7 @@ export class AppStore {
       this.accounts_store.init(),
       this.incomes_store.init(),
       this.expenses_store.init(),
+      this.transactions_store.init(),
     ])
 
     this.initialized = true

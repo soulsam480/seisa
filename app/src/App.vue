@@ -74,7 +74,7 @@ onBeforeUnmount(async () => {
 </script>
 
 <template>
-  <main class="h-screen w-screen">
+  <main class="h-dvh w-screen">
     <div v-if="!initialized" class="h-full w-full flex items-center justify-center">
       <div class="flex flex-col gap-2 items-center">
         <img src="/loader.svg" class="w-10 h-10">

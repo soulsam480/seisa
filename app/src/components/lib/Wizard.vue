@@ -205,7 +205,7 @@ watch(() => formData[currentStep.value], value => validateForm(value))
 
 function next() {
   // @ts-expect-error fuck vue types
-  if (!formState.value.hasValidated && validateForm(formData[currentStep.value], true) !== null || formState.value.errors !== null)
+  if ((!formState.value.hasValidated && validateForm(formData[currentStep.value], true) !== null) || formState.value.errors !== null)
     return
 
   if (disableNext.value) {

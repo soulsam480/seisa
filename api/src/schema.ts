@@ -110,7 +110,7 @@ export type ExpenseModel = Selectable<ExpensesTable>
 export type NewExpense = Insertable<ExpensesTable>
 export type ExpenseUpdate = Updateable<ExpensesTable>
 
-type TransactionType = 'credit' | 'debit'
+export type TransactionType = 'credit' | 'debit'
 
 export interface TransactionsTable {
   id: Generated<number>
