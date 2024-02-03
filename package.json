@@ -19,8 +19,8 @@
     "spell-check": "cspell --no-progress --gitignore --cache --config=.cspell.json \"**/src/**/*.{md,mdx,ts,js,tsx,jsx,vue}\""
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.6.1",
-    "cspell": "^8.3.0",
+    "@antfu/eslint-config": "^2.6.3",
+    "cspell": "^8.3.2",
     "eslint": "^8.56.0",
     "eslint-plugin-format": "^0.1.0",
     "typescript": "^5.3.3"
