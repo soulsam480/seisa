@@ -8,6 +8,7 @@ import type {
 } from '@seisa/api/src/schema'
 import { Form } from '../lib/Form'
 import type { TransactionsStore } from '../store/transactions'
+import { EXPENSE_CATEGORY, INCOME_CATEGORY } from '../../lib/constants'
 import { Tag } from './tag'
 
 export class Transaction {
@@ -110,6 +111,10 @@ export class Transaction {
   async save() {
     return await this.store.update(this)
   }
+
+  static TYPES: TransactionType[] = ['credit', 'debit'] as const
+
+  static CATEGORIES: (ExpenseCategory | IncomeCategory)[] = [...EXPENSE_CATEGORY, ...INCOME_CATEGORY] as const
 }
 
 export class TransactionForm extends Form<Transaction, NewTransaction> {
@@ -119,36 +124,39 @@ export class TransactionForm extends Form<Transaction, NewTransaction> {
   is_active: boolean
   is_recurring: boolean
   tags: number[]
-  category?: ExpenseCategory | IncomeCategory | null
-  from?: string | null
-  notes?: string | null
+  category?: ExpenseCategory | IncomeCategory
+  from?: string
+  notes?: string
   transaction_at?: Date
 
   // FOREIGN KEYS
-  account_id?: number | null
-  income_id?: number | null
-  expense_id?: number | null
+  account_id?: number
+  income_id?: number
+  expense_id?: number
 
   constructor(
-    transaction?: Transaction | TransactionForm,
+    transaction?: Partial<Transaction | TransactionForm>,
   ) {
     super()
 
     this.name = transaction?.name ?? ''
     this.amount = transaction?.amount ?? 0
     this.is_active = transaction?.is_active ?? true
-    this.is_recurring = transaction?.is_recurring ?? true
-    this.category = transaction?.category ?? 'transfer'
+    this.is_recurring = transaction?.is_recurring ?? false
+    this.category = transaction?.category ?? 'food_and_drinks'
     this.from = transaction?.from ?? ''
     this.notes = transaction?.notes ?? ''
-    this.account_id = transaction?.account_id ?? undefined
     this.category = transaction?.category ?? undefined
     this.from = transaction?.from ?? undefined
     this.notes = transaction?.notes ?? undefined
     this.transaction_at = transaction?.transaction_at ?? undefined
     this.type = transaction?.type ?? 'debit'
 
-    this.tags = transaction?.tags.map(it => typeof it === 'object' ? it.id : it) ?? []
+    this.account_id = transaction?.account_id ?? undefined
+    this.income_id = transaction?.income_id ?? undefined
+    this.expense_id = transaction?.expense_id ?? undefined
+
+    this.tags = transaction?.tags?.map(it => typeof it === 'object' ? it.id : it) ?? []
   }
 
   get_model_update_payload() {

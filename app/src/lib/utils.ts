@@ -8,3 +8,5 @@ export function preventSubmit(e: SubmitEvent) {
   e.preventDefault()
   e.stopPropagation()
 }
+
+export const TODAY = new Date()

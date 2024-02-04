@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
 import typo from '@tailwindcss/typography'
+import colors from 'tailwindcss/colors'
 
 const ELEMENT_COLORS = ['primary', 'success', 'warning', 'danger', 'error', 'info']
 
@@ -51,10 +52,12 @@ export default {
       textColor: {
         ...defaultTheme.textColor,
         ...ELEMENT_COLOR_VARIABLES,
+        tertiary: colors.indigo,
       },
       backgroundColor: {
         ...defaultTheme.backgroundColor,
         ...ELEMENT_COLOR_VARIABLES,
+        tertiary: colors.indigo,
       },
       borderColor: {
         ...defaultTheme.borderColor,
@@ -63,6 +66,10 @@ export default {
       borderRadius: {
         ...defaultTheme.borderRadius,
         ...UI_BORDER_RADIUS,
+      },
+      colors: {
+        ...defaultTheme.colors,
+        ...ELEMENT_COLOR_VARIABLES,
       },
     },
   },

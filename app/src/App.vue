@@ -5,6 +5,7 @@ import { logger } from '@seisa/shared/src/logger'
 import { ElButton, ElDivider, ElLink, ElMessageBox, ElNotification } from 'element-plus'
 import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ALLOWED_HASH, useRouter } from './lib/router'
+import LogTransactionForm, { LogTransactionFormTrigger } from './components/transactions/LogTransactionForm.vue'
 import PhArrowCounterClockwiseLight from '~icons/ph/arrow-counter-clockwise-light'
 
 const Home = defineAsyncComponent(() => import('./pages/Home.vue'))
@@ -106,20 +107,22 @@ onBeforeUnmount(async () => {
         </ul>
 
         <div>
-          <ElButton :icon="PhArrowCounterClockwiseLight" @click="reset">
-            Reset
-          </ElButton>
+          <ElButton :icon="PhArrowCounterClockwiseLight" circle @click="reset" />
         </div>
       </div>
 
       <ElDivider class="my-0" />
 
-      <div class="flex-grow p-2">
+      <div class="flex-grow p-2 relative">
+        <LogTransactionFormTrigger class="absolute bottom-4 right-4" />
+
+        <LogTransactionForm />
+
         <template v-if="page === 'home'">
           <Home />
         </template>
 
-        <template v-if="page === 'spend'">
+        <template v-if="page === 'transactions'">
           <Spend />
         </template>
 

@@ -1,9 +1,9 @@
 import { useBrowserLocation, useStorage } from '@vueuse/core'
 import { computed, watch, watchEffect } from 'vue'
 
-export type TPage = 'home' | 'settings' | 'spend'
+export type TPage = 'home' | 'settings' | 'transactions'
 
-export const ALLOWED_HASH: TPage[] = ['home', 'spend', 'settings']
+export const ALLOWED_HASH: TPage[] = ['home', 'transactions', 'settings']
 
 export function useRouter() {
   const location = useBrowserLocation()
@@ -28,7 +28,7 @@ export function useRouter() {
     return value
   })
 
-  // 1. keep the hash in sync with the page. when hash is invalid set it to home
+  // 2. keep the hash in sync with the page. when hash is invalid set it to home
   watchEffect(() => {
     const pageToSet = cachedPage.value.length > 0
       ? `#${cachedPage.value}`
