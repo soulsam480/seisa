@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.11.16",
+    "@types/node": "^20.11.26",
     "fs-extra": "^11.2.0",
     "portfinder": "^1.0.32",
-    "tsx": "^4.7.0"
+    "tsx": "^4.7.1"
   }
 }

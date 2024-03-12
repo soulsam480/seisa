@@ -9,6 +9,8 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import Markdown from 'unplugin-vue-markdown/vite'
 
+// import VueDevTools from 'vite-plugin-vue-devtools'
+
 function SQLiteDevPlugin(): Plugin {
   return {
     name: 'configure-response-headers',
